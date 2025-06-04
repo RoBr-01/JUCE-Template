@@ -10,7 +10,14 @@ This template loosely assumes you are using VSCode, but you can set up your own 
 
 ## Set-up
 
-Before you can start using the template, make sure JUCE is correctly included as a git submodule.
+Clone the project using:
+
+```sh
+git clone --recurse-submodules <repo link>
+```
+
+This -should- immediately set-up the submodules as well.
+
 Next you need to build the AudioPluginHost, which is located in:
 
 ```sh
