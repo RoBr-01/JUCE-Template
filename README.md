@@ -24,7 +24,16 @@ Next you need to build the AudioPluginHost, which is located in:
 cwd/lib/JUCE/extras/AudioPluginHost/Builds
 ```
 
-There you can pick the platform you are building for, and build the *debug* version of the host.
+There you can pick the platform you are building for, and build the _debug_ version of the host.
+
+I recommend doing this only once, and then installing the debug version of AudioPluginHost to a default location on your system.
+For MacOS this would be the appliations folder.
+
+Next we need to set up some names and paths.
+The first is in the .vscode folder in settings.json, here you need to set both the project name and the (absolute) path to AudioPluginHost.
+
+The second is in the CMakeLists.txt file where you need to set the project name to match the name you just used in settings.json.
+Here you can also configure other settings, take a look at "juce_add_plugin" for the options.
 
 ## Usage
 
