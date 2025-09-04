@@ -21,7 +21,7 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
 NewProjectAudioProcessor::~NewProjectAudioProcessor() {}
 
 const juce::String NewProjectAudioProcessor::getName() const {
-    return "MHRTF";
+    return "Template";
 }
 
 bool NewProjectAudioProcessor::acceptsMidi() const {
