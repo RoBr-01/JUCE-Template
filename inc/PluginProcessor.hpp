@@ -59,12 +59,16 @@ class NewProjectAudioProcessor : public juce::AudioProcessor {
 
     const Parameters& getParameterIDs() const;
 
+    juce::UndoManager& getUndoManager();
+
    private:
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
    private:
-    juce::AudioProcessorValueTreeState m_apvts;
     Parameters m_params;
+    juce::UndoManager m_undoManager;
+    juce::AudioProcessorValueTreeState m_apvts;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NewProjectAudioProcessor)
 };

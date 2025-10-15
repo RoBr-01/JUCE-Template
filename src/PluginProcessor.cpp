@@ -14,9 +14,11 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
               .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
               ),
-      m_apvts(*this, nullptr, "APVTS", createParameterLayout())
+      m_apvts(*this, &m_undoManager, "APVTS", createParameterLayout())
 #endif
 {
+    // Preventing unlimited undo history, you can change this of course
+    m_undoManager.setMaxNumberOfStoredUnits(50, 10);
 }
 
 NewProjectAudioProcessor::~NewProjectAudioProcessor() {}
@@ -145,16 +147,19 @@ juce::AudioProcessorEditor* NewProjectAudioProcessor::createEditor() {
 //==============================================================================
 void NewProjectAudioProcessor::getStateInformation(
     juce::MemoryBlock& destData) {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    // Create an XML representation of the current state
+    if (auto state = m_apvts.copyState().createXml()) {
+        copyXmlToBinary(*state, destData);
+    }
 }
 
 void NewProjectAudioProcessor::setStateInformation(const void* data,
                                                    int sizeInBytes) {
-    // You should use this method to restore your parameters from this memory
-    // block, whose contents will have been created by the getStateInformation()
-    // call.
+    // Convert the binary data back into XML
+    if (auto xmlState = getXmlFromBinary(data, sizeInBytes)) {
+        // Rebuild the ValueTree from the XML
+        m_apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+    }
 }
 
 juce::AudioProcessorValueTreeState&
@@ -166,18 +171,22 @@ const Parameters& NewProjectAudioProcessor::getParameterIDs() const {
     return m_params;
 }
 
+juce::UndoManager& NewProjectAudioProcessor::getUndoManager() {
+    return m_undoManager;
+}
+
 // This is where you should add all plug-in parameters
 juce::AudioProcessorValueTreeState::ParameterLayout
 NewProjectAudioProcessor::createParameterLayout() {
     juce::AudioProcessorValueTreeState::ParameterLayout params;
 
-    // auto example = std::make_unique<juce::AudioParameterFloat>(
+    // auto example_param = std::make_unique<juce::AudioParameterFloat>(
     //     m_params.example.id,
     //     m_params.example.name,
     //     juce::NormalisableRange<float>(0.1f, 5.0f, 0.01f, 1.0f),
     //     1.0f);
 
-    // params.add(std::move(example));
+    // params.add(std::move(example_param));
 
     return params;
 }

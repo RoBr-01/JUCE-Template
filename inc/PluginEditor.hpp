@@ -6,7 +6,6 @@
 // Local
 #include "PluginProcessor.hpp"
 
-
 class NewProjectAudioProcessorEditor : public juce::AudioProcessorEditor {
    public:
     NewProjectAudioProcessorEditor(NewProjectAudioProcessor&);
