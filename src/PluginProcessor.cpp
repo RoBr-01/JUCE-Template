@@ -13,7 +13,8 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
 #endif
               .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-      )
+              ),
+      m_apvts(*this, nullptr, "APVTS", createParameterLayout())
 #endif
 {
 }
@@ -137,6 +138,8 @@ bool NewProjectAudioProcessor::hasEditor() const {
 
 juce::AudioProcessorEditor* NewProjectAudioProcessor::createEditor() {
     return new NewProjectAudioProcessorEditor(*this);
+    // Use this if you want to see your parameters without setting up a gui:
+    // return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -154,6 +157,30 @@ void NewProjectAudioProcessor::setStateInformation(const void* data,
     // call.
 }
 
+juce::AudioProcessorValueTreeState&
+NewProjectAudioProcessor::getValueTreeState() {
+    return m_apvts;
+}
+
+const Parameters& NewProjectAudioProcessor::getParameterIDs() const {
+    return m_params;
+}
+
+// This is where you should add all plug-in parameters
+juce::AudioProcessorValueTreeState::ParameterLayout
+NewProjectAudioProcessor::createParameterLayout() {
+    juce::AudioProcessorValueTreeState::ParameterLayout params;
+
+    // auto example = std::make_unique<juce::AudioParameterFloat>(
+    //     m_params.example.id,
+    //     m_params.example.name,
+    //     juce::NormalisableRange<float>(0.1f, 5.0f, 0.01f, 1.0f),
+    //     1.0f);
+
+    // params.add(std::move(example));
+
+    return params;
+}
 // This creates new instances of the plugin
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {
     return new NewProjectAudioProcessor();
