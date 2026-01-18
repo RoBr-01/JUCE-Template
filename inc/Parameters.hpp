@@ -10,12 +10,24 @@ It prevents accidental mismatches when accessing parameters via the APVTS.
 
 struct Parameters {
     struct ParamInfo {
-        juce::String id;
-        juce::String name;
+        const char* id;
+        const char* name;
     };
 
     // Define all parameters here, for example:
     // ParamInfo example{"example_id", "example_name"};
 };
+
+inline const Parameters g_Parameters;
+
+// Easy way to get a parameter safely, do mind that this is not normalized and
+// not smoothed!
+template <typename T>
+inline T getParamAs(const juce::AudioProcessorValueTreeState& apvts,
+                    const char* id) {
+    if (auto* param = apvts.getRawParameterValue(id))
+        return static_cast<T>(param->load());
+    return T{};
+}
 
 #endif /* PARAMETERS_HPP */
