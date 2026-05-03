@@ -1,6 +1,8 @@
 // JUCE
 #include "PluginProcessor.hpp"
 
+#include <ScopedMemoryAllocations/Allocations.h>
+
 #include "PluginEditor.hpp"
 
 NewProjectAudioProcessor::NewProjectAudioProcessor()
@@ -110,6 +112,10 @@ void NewProjectAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+
+    // TODO: This checks for allocations on the audio thread - but should be
+    // moved so it only gets constructed once - but where??
+    auto noAllocs = EA::Allocations::ScopedSetter();
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
